@@ -6,12 +6,26 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.mahesh.callguard.ui.theme.CallGuardTheme
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.width
+import androidx.compose.material3.Button
+import androidx.compose.ui.unit.dp
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.material3.Switch
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -20,10 +34,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             CallGuardTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
+                    CallGuardHomeScreen(modifier = Modifier.padding(innerPadding))
                 }
             }
         }
@@ -31,17 +42,71 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
+fun CallGuardHomeScreen(modifier: Modifier = Modifier) {
+
+    var isProtectionEnabled by remember {
+        mutableStateOf(false)
+    }
+    Column(
+        modifier = modifier.fillMaxSize().padding(24.dp),horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(
+            text="CallGuard",
+            style = MaterialTheme.typography.headlineLarge
+        )
+
+        Spacer(modifier = Modifier.height(40.dp))
+
+        Row(
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = if (isProtectionEnabled) {
+                    "Protection: ON"
+                } else {
+                    "Protection: OFF"
+                },
+                style=MaterialTheme.typography.titleMedium
+            )
+            Spacer(modifier=Modifier.width(10.dp))
+
+            Switch(
+                checked = isProtectionEnabled,
+                onCheckedChange={ enabled ->
+                    isProtectionEnabled = enabled
+                }
+            )
+        }
+
+        Spacer(modifier=Modifier.height(40.dp))
+
+        Text(
+            text = "Selected contacts",
+            style = MaterialTheme.typography.titleMedium
+        )
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        Text(
+            text = "No contacts selected"
+        )
+
+        Spacer(modifier = Modifier.height(40.dp))
+
+        Button(
+            onClick={
+
+            }
+        ){
+            Text("Add important contacts")
+        }
+    }
 }
 
 @Preview(showBackground = true)
 @Composable
-fun GreetingPreview() {
+fun CallGuardPreview() {
     CallGuardTheme {
-        Greeting("Android")
+        CallGuardHomeScreen()
     }
 }
