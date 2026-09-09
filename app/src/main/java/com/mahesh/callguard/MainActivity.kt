@@ -27,6 +27,16 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.material3.Switch
 
+//Contacts permission
+import android.Manifest
+import android.content.pm.PackageManager
+import androidx.core.content.ContextCompat
+
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+
+//Permission Dialog
+import androidx.compose.ui.platform.LocalContext
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,6 +57,19 @@ fun CallGuardHomeScreen(modifier: Modifier = Modifier) {
     var isProtectionEnabled by remember {
         mutableStateOf(false)
     }
+
+    var showContactSelection by remember {
+        mutableStateOf(false)
+    }
+
+    val contactPermissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (isGranted) {
+            showContactSelection = true
+        }
+    }
+
     Column(
         modifier = modifier.fillMaxSize().padding(24.dp),horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -93,9 +116,19 @@ fun CallGuardHomeScreen(modifier: Modifier = Modifier) {
 
         Spacer(modifier = Modifier.height(40.dp))
 
+        val context = LocalContext.current
         Button(
             onClick={
-
+                if (
+                    ContextCompat.checkSelfPermission(
+                        context,
+                        Manifest.permission.READ_CONTACTS
+                    ) == PackageManager.PERMISSION_GRANTED
+                ) {
+                    showContactSelection = true
+                } else {
+                    contactPermissionLauncher.launch(Manifest.permission.READ_CONTACTS)
+                }
             }
         ){
             Text("Add important contacts")
