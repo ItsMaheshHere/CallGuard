@@ -151,8 +151,6 @@ It created a state value that Compose can observe.
 
 ```kotlin
 import androidx.compose.runtime.mutableStateOf
-
-
 ```
 
 
